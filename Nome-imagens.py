@@ -42,3 +42,21 @@ for filename in files:
     dsclip = None
     dataset = None
 
+files_clip = [f for f in files if 'clip' in f]
+print(files_clip)
+
+os.chdir(path)
+
+for filename in files_clip:
+    print('--------------------------------------------------------')
+    name_stif = filename[0:12]
+    print(name_stif)
+
+    # Gera o sql e adiciona no banco
+    cmd1 = 'raster2pgsql -I -C -M -s 4674 ' + filename + ' -t 100x100 public.' + name_stif + ' > ' + name_stif +'.sql'
+    print(cmd1)
+    os.system(cmd1)
+
+    cmd2 = 'PGPASSWORD=secreto psql -U postgres -h localhost -p 5432 -d trabalhobd -f ' + name_stif +'.sql'
+    print(cmd2)
+    os.system(cmd2)
